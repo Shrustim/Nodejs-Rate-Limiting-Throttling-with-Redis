@@ -1,0 +1,83 @@
+  tags:
+    - name: Auth
+      description: Authentication related endpoints
+    - name: Users
+      description: User management endpoints
+  paths:
+       /api/v1/auth/login:
+        post:
+          tags:
+            - Auth
+          summary: User login
+          description: Authenticate a user and return a JWT token.
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+          responses:
+            '200':
+              description: Successful login
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+            '401':
+              description: Unauthorized - Invalid credentials
+       /api/v1/users/me:
+        get:
+          tags:
+            - Users
+          summary: Get current user
+          description: Retrieve the details of the currently authenticated user.
+          security:
+            - bearerAuth: []
+          responses:
+            '200':
+              description: Successful retrieval of user details
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      email:
+                        type: string
+                      name:
+                        type: string
+            '401':
+              description: Unauthorized - Invalid or missing token
+      
+  components:    
+      securitySchemes:
+        bearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      schemas:
+        User: 
+          type: object
+          properties:
+              id:
+                type: string
+              email:
+                type: string
+              name:
+                type: string 
+        LoginRequest:
+          type: object
+          properties:
+              email:
+                type: string
+              password:
+                type: string
